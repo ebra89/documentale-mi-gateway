@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 @Slf4j
-@RestController
+//@RestController
 public class GatewayController {
 
   /*  @GetMapping(value = "/token")

@@ -2,52 +2,94 @@ server:
   port: 8080
   servlet:
     context-path:
-  forward-headers-strategy: framework
+  #forward-headers-strategy: framework
 
 spring:
   application:
-    name: documentale-mi-gateway
+    name: documentale-gateway
   cloud:
     gateway:
-      httpclient:
-        ssl:
-          useInsecureTrustManager: true
-      default-filters:
-      - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
-      - AddResponseHeader=Access-Control-Allow-Origin, *
-      #- TokenRelay=
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowedHeaders: "*"
-            allowedMethods:
-              - GET
-              - OPTIONS
-              - POST
-              - PUT
-              - DELETE
-              - PATCH
-              - HEAD
+      discovery:
+        locator:
+          enable: true
       routes:
         - id: documentale-api
-          uri: http://localhost:8090
+          uri: lb://DOCUMENTALE-API
           predicates:
             - Path=/documentale-api/**
           filters:
-            - RewritePath=/(?<segment>.*),/$\{segment}
+            - RewritePath=/documentale-api/(?<segment>.*),/$\{segment}
         - id: documentale-config
-          uri: http://localhost:8091
+          uri: lb://DOCUMENTALE-CONFIG
           predicates:
             - Path=/documentale-config/**
           filters:
-            - RewritePath=/(?<segment>.*),/$\{segment}
+            - RewritePath=/documentale-config/(?<segment>.*),/$\{segment}
         - id: documentale-content
-          uri: http://localhost:8092
+          uri: lb://DOCUMENTALE-CONTENT
           predicates:
             - Path=/documentale-content/**
           filters:
-            - RewritePath=/(?<segment>.*),/$\{segment}
+            - RewritePath=/documentale-content/(?<segment>.*),/$\{segment}
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8281/auth/realms/<oauth2>
+
+#  cloud:
+#    gateway:
+#      httpclient:
+#        ssl:
+#          useInsecureTrustManager: true
+#      default-filters:
+#      - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+#      - AddResponseHeader=Access-Control-Allow-Origin, *
+#      #- TokenRelay=
+#      globalcors:
+#        cors-configurations:
+#          '[/**]':
+#            allowedOrigins: "*"
+#            allowedHeaders: "*"
+#            allowedMethods:
+#              - GET
+#              - OPTIONS
+#              - POST
+#              - PUT
+#              - DELETE
+#              - PATCH
+#              - HEAD
+#      routes:
+#        - id: documentale-api
+#          uri: http://localhost:8090
+#          predicates:
+#            - Path=/documentale-api/**
+#          filters:
+#            - RewritePath=/(?<segment>.*),/$\{segment}
+#        - id: documentale-config
+#          uri: http://localhost:8091
+#          predicates:
+#            - Path=/documentale-config/**
+#          filters:
+#            - RewritePath=/(?<segment>.*),/$\{segment}
+#        - id: documentale-content
+#          uri: http://localhost:8092
+#          predicates:
+#            - Path=/documentale-content/**
+#          filters:
+#            - RewritePath=/(?<segment>.*),/$\{segment}
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:password@localhost:8761/eureka
+    registryFetchIntervalSeconds: 5
+  instance:
+    leaseRenewalIntervalInSeconds: 5
+    leaseExpirationDurationInSeconds: 10
+
+
+
 
 #  security:
 #    oauth2:
@@ -113,12 +155,12 @@ springdoc:
 
 logging:
   level:
-    '[org.springframework.security]': DEBUG
+    #'[org.springframework.security]': DEBUG
     '[org.springframework.cloud.gateway]': INFO
 
-security:
-  basic:
-    enabled: false
+#security:
+#  basic:
+#    enabled: false
 
 management:
   server:

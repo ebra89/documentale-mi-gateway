@@ -1,0 +1,22 @@
+server:
+  port: 8761
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+
+
+eureka:
+  server:
+    enableSelfPreservation: false
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+  username: ${EUREKA_USERNAME:eureka}
+  password: ${EUREKA_PASSWORD:password}
+
+
+
