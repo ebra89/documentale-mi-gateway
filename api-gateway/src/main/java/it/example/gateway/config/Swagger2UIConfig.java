@@ -3,6 +3,7 @@ package it.example.gateway.config;
 import lombok.extern.slf4j.Slf4j;
 
 
+/*
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.gateway.route.RouteDefinition;
@@ -13,15 +14,17 @@ import org.springframework.context.annotation.Lazy;
 
 import java.util.ArrayList;
 import java.util.List;
+*/
 
 
-@Slf4j
+/*@Slf4j
 @Configuration
-@EnableDiscoveryClient
+@EnableDiscoveryClient*/
 //@EnableCaching
 public class Swagger2UIConfig {
 
 
+/*
 
     @Bean
     @Lazy(false)
@@ -38,6 +41,7 @@ public class Swagger2UIConfig {
         });
         return groups;
     }
+*/
 
 
 
