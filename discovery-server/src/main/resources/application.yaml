@@ -2,19 +2,26 @@ server:
   port: 8761
 
 spring:
-  main:
-    allow-bean-definition-overriding: true
+  application:
+    name: registry
+  cloud:
+    config:
+      import-check:
+        enabled: true
+#  main:
+#    allow-bean-definition-overriding: true
 
 
 
 eureka:
-  server:
-    enableSelfPreservation: false
+  #server:
+    #enableSelfPreservation: false
   instance:
-    hostname: localhost
+      hostname: localhost
+      prefer-ip-address: true
   client:
-    register-with-eureka: false
-    fetch-registry: false
+      register-with-eureka: false
+      fetch-registry: false
   username: ${EUREKA_USERNAME:eureka}
   password: ${EUREKA_PASSWORD:password}
 

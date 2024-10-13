@@ -2,8 +2,8 @@ version: '3'
 
 
 services:
-  postgres-hip:
-    container_name: postgres-hip
+  my-postgres:
+    container_name: my-postgres
     image: postgres:10.8
     restart: always
     environment:
@@ -15,21 +15,21 @@ services:
     networks:
       - gateway-network
     volumes:
-      - postgres-hip:/var/lib/postgresql/data
+      - my-postgres:/var/lib/postgresql/data
 
   keycloak:
     container_name: keycloak
     command: start-dev
     image: quay.io/keycloak/keycloak:25.0.0
     depends_on:
-      - postgres-hip
+      - my-postgres
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
       - KC_HTTP_ENABLED=true
       - KC_HOSTNAME_STRICT_HTTPS=false
       - KC_DB=postgres
-      - KC_DB_URL=jdbc:postgresql://postgres-hip/keycloak_db
+      - KC_DB_URL=jdbc:postgresql://my-postgres/keycloak_db
       - KC_DB_USERNAME=postgres
       - KC_DB_PASSWORD=postgres
     ports:
@@ -39,7 +39,7 @@ services:
       - gateway-network
 
 volumes:
-  postgres-hip:
+  my-postgres:
     driver: local
 
 networks:
