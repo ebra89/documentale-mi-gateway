@@ -5,37 +5,40 @@ server:
   #forward-headers-strategy: framework
 
 spring:
+  #main:
+    #web-application-type: reactive
   application:
-    name: documentale-gateway
+    name: documentale-api-gateway
   cloud:
     gateway:
       discovery:
         locator:
           enable: true
+          lowerCaseServiceId: true
       routes:
-        - id: documentale-api
-          uri: lb://DOCUMENTALE-API
-          predicates:
-            - Path=/documentale-api/**
-          filters:
-            - RewritePath=/documentale-api/(?<segment>.*),/$\{segment}
-        - id: documentale-config
-          uri: lb://DOCUMENTALE-CONFIG
-          predicates:
-            - Path=/documentale-config/**
-          filters:
-            - RewritePath=/documentale-config/(?<segment>.*),/$\{segment}
-        - id: documentale-content
-          uri: lb://DOCUMENTALE-CONTENT
-          predicates:
-            - Path=/documentale-content/**
-          filters:
-            - RewritePath=/documentale-content/(?<segment>.*),/$\{segment}
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: http://localhost:8281/auth/realms/<oauth2>
+      - id: documentale-api
+        uri: lb://documentale-api/
+        predicates:
+          - Path=/documentale-api/**
+        filters:
+          - RewritePath=/(?<segment>.*),/$\{segment}
+      - id: documentale-config
+        uri: lb://DOCUMENTALE-CONFIG
+        predicates:
+          - Path=/documentale-config/**
+        filters:
+          - RewritePath=/(?<segment>.*),/$\{segment}
+      - id: documentale-content
+        uri: lb://DOCUMENTALE-CONTENT
+        predicates:
+          - Path=/documentale-content/**
+        filters:
+          - RewritePath=/(?<segment>.*),/$\{segment}
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:8281/auth/realms/documentale
 
 #  cloud:
 #    gateway:
@@ -82,11 +85,12 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://eureka:password@localhost:8761/eureka
-    registryFetchIntervalSeconds: 5
+      defaultZone: ${EUREKA_URI:http://eureka:password@localhost:8761/eureka}
+    #registryFetchIntervalSeconds: 5
   instance:
-    leaseRenewalIntervalInSeconds: 5
-    leaseExpirationDurationInSeconds: 10
+    prefer-ip-address: true
+  #  leaseRenewalIntervalInSeconds: 5
+  #  leaseExpirationDurationInSeconds: 10
 
 
 
