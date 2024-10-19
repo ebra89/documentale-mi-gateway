@@ -15,30 +15,62 @@ spring:
         locator:
           enable: true
           lowerCaseServiceId: true
+      default-filters:
+      - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      - AddResponseHeader=Access-Control-Allow-Origin, *
+      - TokenRelay=
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods:
+              - GET
+              - OPTIONS
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+              - HEAD
       routes:
       - id: documentale-api
         uri: lb://documentale-api/
+        #uri: http://localhost:8091
         predicates:
           - Path=/documentale-api/**
         filters:
-          - RewritePath=/(?<segment>.*),/$\{segment}
+          - StripPrefix=1
+          #- RewritePath=/(?<segment>.*),/$\{segment}
       - id: documentale-config
         uri: lb://DOCUMENTALE-CONFIG
         predicates:
           - Path=/documentale-config/**
         filters:
-          - RewritePath=/(?<segment>.*),/$\{segment}
+          - StripPrefix=1
+          #- RewritePath=/(?<segment>.*),/$\{segment}
       - id: documentale-content
         uri: lb://DOCUMENTALE-CONTENT
         predicates:
           - Path=/documentale-content/**
         filters:
-          - RewritePath=/(?<segment>.*),/$\{segment}
+          - StripPrefix=1
+          #- RewritePath=/(?<segment>.*),/$\{segment}
   security:
     oauth2:
-      resource-server:
+      resourceserver:
         jwt:
-          issuer-uri: http://localhost:8281/auth/realms/documentale
+          jwk-set-uri: http://localhost:8090/realms/documentale-mi/protocol/openid-connect/certs
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8090/realms/documentale-mi
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: documentale-mi
+            client-secret: vz1oiV3XfRTlLWE1lM9zYUiWJgO52P4Z
+            authorization-grant-type: authorization_code
+            scope: openid
 
 #  cloud:
 #    gateway:
@@ -93,37 +125,6 @@ eureka:
   #  leaseExpirationDurationInSeconds: 10
 
 
-
-
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          #jwk-set-uri: http://localhost:8090/realms/hip20/protocol/openid-connect/certs
-#          jwk-set-uri: https://identity-server/realms/hip20/protocol/openid-connect/certs
-#      client:
-#        provider:
-#          keycloak:
-#            #issuer-uri: http://localhost:8090/realms/hip20
-#            issuer-uri: https://identity-server/realms/hip20
-#            #authorization-uri: https://identity-server/realms/hip20/protocol/openid-connect/auth
-#            #token-uri: https://identity-server/realms/hip20/protocol/openid-connect/token
-#            #user-info-uri: https://identity-server/realms/hip20/protocol/openid-connect/userinfo
-#            #user-name-attribute: preferred_username
-#            #authorized-grant-types: password
-#            #user-name-attribute: sub
-#        registration:
-#          gateway:
-#            provider: keycloak
-#            #client-id: hip-gateway
-#            client-id:
-#            client-secret:
-#            authorization-grant-type: authorization_code
-#            scope: openid,profile,email
-#            #redirect-uri: "https://identity-server/login/oauth2/code/keycloak"
-#            #authorized-grant-types: password
-
-
 ## swagger
 springdoc:
   enable-native-support: true
@@ -147,37 +148,10 @@ springdoc:
         primaryName: documentale-content
 
 
-
-
-
-
-
-
-
-
-
-
 logging:
   level:
     #'[org.springframework.security]': DEBUG
     '[org.springframework.cloud.gateway]': INFO
-
-#security:
-#  basic:
-#    enabled: false
-
-management:
-  server:
-    port: 9090
-  #security:
-  #  enabled: false
-  #endpoint:
-  #  health:
-  #    enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: "*"
 
 
 application:
