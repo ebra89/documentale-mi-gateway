@@ -1,3 +1,25 @@
+
+#spring:
+#  cloud:
+#    gateway:
+#      default-filters:
+#        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+#        - AddResponseHeader=Access-Control-Allow-Origin, *
+#        - TokenRelay=
+#      routes:
+#        - id: documentale-api
+#          uri: http://localhost:8081
+#          predicates:
+#            - Path=/documentale-api/**
+#          filters:
+#          - name: CustomHeaderFilter
+#            args:
+#              headerName: X-Custom-Header
+#              headerValue: CustomValue
+
+
+
+
 server:
   port: 8080
   servlet:
@@ -40,6 +62,10 @@ spring:
           - Path=/documentale-api/**
         filters:
           - StripPrefix=1
+          #- name: CustomHeaderFilter
+          #  args:
+          #    headerName: X-Custom-Header
+          #    headerValue: CustomValue
           #- RewritePath=/(?<segment>.*),/$\{segment}
       - id: documentale-config
         uri: lb://DOCUMENTALE-CONFIG
