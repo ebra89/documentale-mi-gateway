@@ -36,7 +36,7 @@ spring:
       discovery:
         locator:
           enable: true
-          lowerCaseServiceId: true
+          lower-case-service-id: true
       default-filters:
       - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
       - AddResponseHeader=Access-Control-Allow-Origin, *
@@ -94,7 +94,7 @@ spring:
           keycloak:
             provider: keycloak
             client-id: documentale-mi
-            client-secret: vz1oiV3XfRTlLWE1lM9zYUiWJgO52P4Z
+            client-secret: qRRiayor9mCTWpCnzBaw3M0VZsB5Ex3M
             authorization-grant-type: authorization_code
             scope: openid
 
